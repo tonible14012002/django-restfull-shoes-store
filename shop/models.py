@@ -1,4 +1,5 @@
 from msilib.schema import SelfReg
+from ntpath import join
 from django.db import models
 
 # Create your models here.
@@ -24,12 +25,20 @@ class GenericProduct(BaseModel):
     def __str__(self):
         return self.name
 
-class Attribute(BaseModel):
+class AttributeClass(BaseModel):
     name = models.CharField(max_length=100)
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    
+class Attribute(BaseModel):
+    name = models.CharField(max_length=100)
+    attr_class = models.ForeignKey(AttributeClass, 
+                                   on_delete=models.CASCADE,
+                                   related_name='attributes',
+                                   null=True)
+    def __str__(self):
+        return self.name
+  
 class Size(BaseModel):
     SIZE_CHOICES = ((str(i), str(i)) for i in range(35,46))
     size = models.CharField(choices=SIZE_CHOICES,
@@ -62,12 +71,14 @@ class SpecificProduct(BaseModel):
                                   max_length=50,
                                   default=ORDER_TYPE_CHOICES[0][0])
     attributes = models.ManyToManyField(Attribute, related_name='specific_products')
+    attributes_str = models.CharField(max_length=150, blank=True, null=True)
     color = models.ForeignKey(Color, related_name='specific_products',
                               on_delete=models.CASCADE,
                               null=True, blank=True)
 
     class Meta:
         unique_together = ('color', 'name')
+        ordering = ('-created_at', '-updated_at')
 
     def __str__(self):
         return self.name    
