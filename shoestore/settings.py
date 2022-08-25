@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     
     'users',
     'shop',
+    'banners',
     # 3rd party app
     'rest_framework',
     'rest_framework_simplejwt',
@@ -148,3 +149,5 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=1)
 }
+
+APPEND_SLASH = False
