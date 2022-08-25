@@ -19,7 +19,8 @@ class Category(BaseModel):
 class GenericProduct(BaseModel):
     name = models.CharField(max_length=100)
     details = models.TextField()
-    image = models.ImageField(upload_to='generic_shoes/%y/%m/%d')
+    image = models.ImageField(upload_to='generic_shoes/%y/%m/%d',
+                              null=True, blank=True)
     categories = models.ManyToManyField(Category, related_name='generic_products')
 
     def __str__(self):
@@ -71,7 +72,7 @@ class SpecificProduct(BaseModel):
                                   max_length=50,
                                   default=ORDER_TYPE_CHOICES[0][0])
     attributes = models.ManyToManyField(Attribute, related_name='specific_products')
-    attributes_str = models.CharField(max_length=150, blank=True, null=True)
+    attributes_str = models.CharField(max_length=150, blank=True, null=True, default='{}')
     color = models.ForeignKey(Color, related_name='specific_products',
                               on_delete=models.CASCADE,
                               null=True, blank=True)
@@ -86,7 +87,7 @@ class SpecificProduct(BaseModel):
 class ProductOption(models.Model):
     specific_product = models.ForeignKey(SpecificProduct,
                                          on_delete=models.CASCADE,
-                                         related_name='product_option_set')
+                                         related_name='product_options')
     
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
     stock = models.SmallIntegerField()
