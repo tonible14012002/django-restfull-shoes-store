@@ -1,3 +1,4 @@
+from dataclasses import field
 from pyexpat import model
 from rest_framework import serializers
 from .models import *
@@ -28,19 +29,50 @@ class ProductOptionSerializer(serializers.ModelSerializer):
         model = ProductOption
         exclude = ['specific_product']
 
-class SpecificProductDetailSerializer(serializers.ModelSerializer):
-    product_options = ProductOptionSerializer(many=True)
-    color = ColorSerializer()
+class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SpecificProduct
-        fields = ['name', 'generic_product', 'product_options', 'order_type', 'color', 'updated_at', 'created_at']
+        model  = ProductImage
+        exclude = ['media']
+        
+class SimpleProductMediaSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, source='get_two_first')
+    class Meta:
+        model = ProductMedia
+        fields = ['images']
+
+class DetailProductMediaSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True)
+    class Meta:
+        model = ProductMedia
+        fields = ['images']
 
 class SpecificProductSerializer(serializers.ModelSerializer):
-    color = ColorSerializer()
+    
+    price_range = serializers.SerializerMethodField()
+    color = ColorSerializer(read_only=True)
     attributes = AttributeSerialier(many=True)
+    media = SimpleProductMediaSerializer()
     class Meta:
         model = SpecificProduct
         fields = '__all__'
+        read_only_fields = ['attribute_str']        
+            
+    def get_price_range(self, obj):
+        price_set = list(map(
+            lambda option:option.price, 
+            obj.product_options.all()
+        ))
+        return f'{min(price_set)} - {max(price_set)}'
+
+
+class SpecificProductDetailSerializer(SpecificProductSerializer):
+    media = DetailProductMediaSerializer()
+    product_options = ProductOptionSerializer(many=True)
+    
+    class Meta:
+        model = SpecificProduct
+        fields = ['id', 'name', 'generic_product', 'product_options', 'media',
+                  'order_type', 'color', 'updated_at', 'created_at']
 
 class GenericProductSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True)
@@ -52,4 +84,4 @@ class AttributeClassSerializer(serializers.ModelSerializer):
     attributes = AttributeSerialier(many=True)
     class Meta:
         model = AttributeClass
-        fields = ['name', 'attributes']
+        fields = ['id', 'name', 'attributes']
