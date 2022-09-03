@@ -30,16 +30,26 @@ class ProductOptionAdmin(admin.ModelAdmin):
 class ProductOptionInline(admin.StackedInline):
     model = ProductOption    
 
+class ProductMediaInline(admin.StackedInline):
+    model = ProductMedia
+
+class ProductImageInline(admin.StackedInline):
+    model = ProductImage
+
 @admin.register(SpecificProduct)
 class SpecificProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'order_type', 'get_generic_product' , 'created_at', 'updated_at', 'get_colors', 'attributes_str']
     readonly_fields = ['attributes_str']
-    inlines = [ProductOptionInline]
+    inlines = [ProductOptionInline, ProductMediaInline]
     def get_generic_product(self, obj):
         return obj.generic_product
     def get_colors(self, obj):
         return obj.color
-    
+
+@admin.register(ProductMedia)
+class ProductMediaAdmin(admin.ModelAdmin):
+    inlines = [ProductImageInline]
+
 @admin.register(Color)
 class ColorAdmin(admin.ModelAdmin):
     list_display = ['name', 'color_code']
@@ -48,10 +58,14 @@ class ColorAdmin(admin.ModelAdmin):
 class SizeAdmin(admin.ModelAdmin):
     list_display = ['size']
 
-@admin.register(Attribute)
-class AttributeAdmin(admin.ModelAdmin):
-    list_display = ['name']
+class AttributeInline(admin.StackedInline):
+    model = Attribute
 
 @admin.register(AttributeClass)
 class AttributeClassAdmin(admin.ModelAdmin):
     list_display = ['name']
+    inlines = [AttributeInline]
+
+@admin.register(Attribute)
+class AttributeAdmin(admin.ModelAdmin):
+    list_display = ['id','name', 'value']
