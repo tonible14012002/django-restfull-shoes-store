@@ -1,5 +1,3 @@
-from msilib.schema import SelfReg
-from ntpath import join
 from django.db import models
 
 # Create your models here.
@@ -33,6 +31,7 @@ class AttributeClass(BaseModel):
 
 class Attribute(BaseModel):
     name = models.CharField(max_length=100)
+    value = models.CharField(max_length=100, default='none')
     attr_class = models.ForeignKey(AttributeClass, 
                                    on_delete=models.CASCADE,
                                    related_name='attributes',
@@ -95,6 +94,25 @@ class ProductOption(models.Model):
     
     class Meta:
         unique_together = ('specific_product', 'size')
+        ordering = ('-price',)
         
     def __str__(self):
         return f'{self.specific_product}-{self.size}'
+
+class ProductMedia(BaseModel):
+    product = models.OneToOneField(SpecificProduct,
+                                   on_delete=models.CASCADE,
+                                   related_name='media')
+    def get_two_first(self):
+        return self.images.all()[0:2]
+
+    def __str__(self):
+        return f'{self.product.name} Media'
+    
+class ProductImage(BaseModel):
+    image = models.ImageField(upload_to='products/%y/%m/%d', null=True)
+    media = models.ForeignKey(ProductMedia,
+                              on_delete=models.CASCADE,
+                              related_name='images')
+    class Meta:
+        ordering = ('created_at',)
