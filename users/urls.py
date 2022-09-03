@@ -9,6 +9,6 @@ router.register('all', views.UserViewSet)
 app_name='users'
 urlpatterns = [
     path('', include(router.urls)),
-    path('auth/token', jwt_views.TokenObtainPairView.as_view()),
+    path('auth/token/', jwt_views.TokenObtainPairView.as_view()),
     path('auth/token/refresh/', jwt_views.TokenRefreshView.as_view())
 ]

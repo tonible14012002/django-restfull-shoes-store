@@ -17,7 +17,7 @@ import json
 @receiver(m2m_changed, sender=SpecificProduct.attributes.through)
 def attributes_changed(sender, instance, **kwargs):
     attrs = json.loads(instance.attributes_str)
-    attrs['attributes'] = ','.join([attr.name for attr in instance.attributes.all()])
+    attrs['attributes'] = ','.join([attr.value for attr in instance.attributes.all()])
     instance.attributes_str = json.dumps(attrs)
     instance.save()
 
