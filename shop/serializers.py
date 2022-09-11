@@ -64,21 +64,22 @@ class SpecificProductSerializer(serializers.ModelSerializer):
         ))
         return f'{min(price_set)} - {max(price_set)}'
 
-
+class GenericProductSerializer(serializers.ModelSerializer):
+    categories = CategorySerializer(many=True)
+    specific_products = SpecificProductSerializer(many=True)
+    class Meta:
+        model = GenericProduct
+        fields = ['name', 'details', 'categories', 'specific_products']
+        
 class SpecificProductDetailSerializer(SpecificProductSerializer):
     media = DetailProductMediaSerializer()
     product_options = ProductOptionSerializer(many=True)
-    
+    generic_product = GenericProductSerializer()
     class Meta:
         model = SpecificProduct
         fields = ['id', 'name', 'generic_product', 'product_options', 'media',
-                  'order_type', 'color', 'updated_at', 'created_at']
+                  'order_type', 'color', 'updated_at', 'created_at', 'price_range']
 
-class GenericProductSerializer(serializers.ModelSerializer):
-    categories = CategorySerializer(many=True)
-    class Meta:
-        model = GenericProduct
-        fields = '__all__'
 
 class AttributeClassSerializer(serializers.ModelSerializer):
     attributes = AttributeSerialier(many=True)

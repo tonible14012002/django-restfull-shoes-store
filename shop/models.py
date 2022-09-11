@@ -65,7 +65,7 @@ class SpecificProduct(BaseModel):
     name = models.CharField(max_length=100)
     generic_product = models.ForeignKey(GenericProduct,
                                         on_delete=models.CASCADE,
-                                        related_name='specific_product',
+                                        related_name='specific_products',
                                         null=False, blank=False)
     order_type = models.CharField(choices=ORDER_TYPE_CHOICES,
                                   max_length=50,

@@ -1,7 +1,6 @@
-from asyncio import constants
-from unicodedata import category
-from unittest import expectedFailure
 from rest_framework import (generics, viewsets)
+
+from cart.cart import Cart
 from .models import (
     AttributeClass,
     Category,
@@ -13,13 +12,15 @@ from .serializers import (
     SpecificProductSerializer,
     SpecificProductDetailSerializer,
     GenericProductSerializer,
-    AttributeClassSerializer
+    AttributeClassSerializer,
 )
 
 from django.db.models import Q
 from functools import reduce
 import operator
 import time
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 def sleep(timer):
     time.sleep(timer)
@@ -118,7 +119,11 @@ class SpecificProductViewSet(viewsets.ViewSet,
         if self.action == 'retrieve':
             return SpecificProductDetailSerializer
         return SpecificProductSerializer
-
+    
+    def get_object(self):
+        sleep(0.5)
+        return super().get_object()
+    
     def get_queryset(self):
         sleep(1)
         products = super().get_queryset()
@@ -147,4 +152,6 @@ class SpecificProductViewSet(viewsets.ViewSet,
                 products = products.filter(
                     query
                 ).distinct()
+
+
         return products
