@@ -65,6 +65,7 @@ def make_query_by_price_range(price_range_query):
             if not range[0].isdecimal() or not range[1].isdecimal():
                 raise Exception('query range must be decimal')
             return range
+
         range_list = list(map(range_converter, price_ranges))
         query = reduce(
             operator.or_,
@@ -79,7 +80,6 @@ def make_query_by_price_range(price_range_query):
 def make_query_by_category(cate_query):
     if not cate_query:
         return None
-
     query = None
     try:
         cates = cate_query.split(',')
@@ -152,6 +152,5 @@ class SpecificProductViewSet(viewsets.ViewSet,
                 products = products.filter(
                     query
                 ).distinct()
-
 
         return products

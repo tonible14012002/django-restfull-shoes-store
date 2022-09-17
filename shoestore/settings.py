@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     'shop',
     'banners',
     'cart',
+    'order',
     # 3rd party app
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'django_filters',
     
 ]
 
@@ -140,23 +142,27 @@ AUTH_USER_MODEL = 'users.User'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'http://192.168.1.190:3000',
+    'http://192.168.20.98:3000',
 ]
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000',
-    'http://192.168.1.190:3000',
-]
-CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-
 CSRF_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SAMESITE = 'None'
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#      ],
-# }
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+    'http://192.168.20.98:3000',
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+     ],
+}
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=1)

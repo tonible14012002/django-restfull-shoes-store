@@ -1,7 +1,3 @@
-from asyncio import SendfileNotAvailableError
-from math import prod
-from ssl import create_default_context
-from time import process_time_ns
 from django.db.models.signals import (
     m2m_changed,
     post_save,
@@ -32,7 +28,7 @@ def option_saved(sender, instance, **kwrags):
     print(product.attributes_str)
 
 @receiver(pre_save, sender=SpecificProduct)
-def Product_saved(sender, instance, **kwargs):
+def Product_before_save(sender, instance, **kwargs):
     if instance.color:        
         attrs = json.loads(instance.attributes_str)
         attrs['color'] = instance.color.name

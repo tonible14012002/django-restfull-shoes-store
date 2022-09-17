@@ -67,7 +67,7 @@ class SpecificProductSerializer(serializers.ModelSerializer):
 class GenericProductSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True)
     specific_products = SpecificProductSerializer(many=True)
-    class Meta:
+    class Meta: 
         model = GenericProduct
         fields = ['name', 'details', 'categories', 'specific_products']
         

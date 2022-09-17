@@ -97,7 +97,7 @@ class ProductOption(models.Model):
         ordering = ('-price',)
         
     def __str__(self):
-        return f'{self.specific_product}-{self.size}'
+        return f'{self.specific_product} size-{self.size}'
 
 class ProductMedia(BaseModel):
     product = models.OneToOneField(SpecificProduct,
